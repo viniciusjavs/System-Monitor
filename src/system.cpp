@@ -14,7 +14,8 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-System::System() : os_(LinuxParser::OperatingSystem()){}
+System::System()
+    : os_(LinuxParser::OperatingSystem()), kernel_(LinuxParser::Kernel()) {}
 
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
@@ -22,8 +23,8 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { return processes_; }
 
-// TODO: Return the system's kernel identifier (string)
-std::string System::Kernel() { return string(); }
+// Returns the system's kernel identifier (string).
+std::string System::Kernel() const { return kernel_; }
 
 // TODO: Return the system's memory utilization
 float System::MemoryUtilization() { return 0.0; }
