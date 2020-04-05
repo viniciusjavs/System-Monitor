@@ -17,7 +17,7 @@ using std::vector;
 System::System()
     : os_(LinuxParser::OperatingSystem()), kernel_(LinuxParser::Kernel()) {}
 
-// TODO: Return the system's CPU
+// Returns the system's CPU.
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes

@@ -113,21 +113,44 @@ long LinuxParser::UpTime() {
   return up_time;
 }
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+// Reads and returns the number of jiffies for the system.
+long LinuxParser::Jiffies(const std::valarray<long>& cpu_state) {
+  return ActiveJiffies(cpu_state) + IdleJiffies(cpu_state);
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
+// Reads and returns the number of active jiffies for the system.
+inline long LinuxParser::ActiveJiffies(const std::valarray<long>& cpu_state) {
+  // cpu_state[kUser_] =  user + guest
+  // cpu_state[kNice_] = nice + guest_nice
+  // cpu_state[kSystem_] + cpu_state[kIRQ_] + cpu_state[kSoftIRQ_] = system
+  return cpu_state[kUser_] + cpu_state[kNice_] + cpu_state[kSystem_] +
+         cpu_state[kIRQ_] + cpu_state[kSoftIRQ_] + cpu_state[kSteal_];
+}
 
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+// Reads and returns the number of idle jiffies for the system.
+inline long LinuxParser::IdleJiffies(const std::valarray<long>& cpu_state) {
+  // cpu_state[kIdle_] + cpu_state[kIOwait_] = idle
+  return cpu_state[kIdle_] + cpu_state[kIOwait_];
+}
 
-// TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+// Reads and returns CPU utilization.
+std::valarray<long> LinuxParser::CpuUtilization() {
+  std::valarray<long> cpu_state(szCPUStates_);
+  string line;
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    std::istream_iterator<string> linestream_iter(linestream);  // read first
+    std::for_each(std::begin(cpu_state), std::end(cpu_state),
+                  [&linestream](auto& elem) { linestream >> elem; });
+  }
+  return cpu_state;
+}
 
 // Reads and returns the total number of processes.
 int LinuxParser::TotalProcesses() {
