@@ -25,8 +25,10 @@ float Process::CpuUtilization() const {
          static_cast<float>(LinuxParser::UpTime() - LinuxParser::UpTime(pid_));
 }
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+/*
+   Return the command that generated this process.
+*/
+string Process::Command() { return LinuxParser::Command(pid_); }
 
 // Returns this process's memory utilization.
 string Process::Ram() { return LinuxParser::Ram(pid_); }
