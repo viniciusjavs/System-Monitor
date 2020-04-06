@@ -15,7 +15,7 @@ class System {
   float MemoryUtilization();
   long UpTime();                      // TODO: See src/system.cpp
   int TotalProcesses();
-  int RunningProcesses();             // TODO: See src/system.cpp
+  int RunningProcesses();
   std::string Kernel() const;
   std::string OperatingSystem() const;
 
