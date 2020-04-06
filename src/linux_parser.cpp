@@ -47,6 +47,7 @@ string LinuxParser::Kernel() {
 }
 
 // BONUS: Update this to use std::filesystem
+// Reads and returns a vector of pids of all processes.
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
   DIR* directory = opendir(kProcDirectory.c_str());
