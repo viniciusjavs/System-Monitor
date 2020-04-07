@@ -9,6 +9,8 @@
 
 #include "linux_parser.h"
 
+using namespace LinuxParser;
+
 using std::string;
 using std::to_string;
 using std::vector;
@@ -18,8 +20,15 @@ Process::Process(int pid) : pid_(pid) {}
 // Returns this process's ID.
 int Process::Pid() const { return pid_; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+// Return this process's CPU utilization.
+float Process::CpuUtilization() {
+  std::valarray<long> current_state{ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK),
+                                    UpTime()};
+  std::valarray<long> cpu_state = current_state - cpu_state_;
+  cpu_state_ = current_state;
+  // Process CPU utilization = spent seconds / total seconds
+  return cpu_state[0] / static_cast<float>(cpu_state[1]);
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { return string(); }
