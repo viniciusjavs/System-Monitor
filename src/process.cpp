@@ -30,8 +30,10 @@ string Process::Ram() { return string(); }
 // Returns the user (name) that generated this process.
 string Process::User() { return LinuxParser::User(pid_); }
 
-// TODO: Return the age of this process (in seconds)
-long Process::UpTime() { return 0; }
+// Returns the age of this process (in seconds).
+long Process::UpTime() {
+  return LinuxParser::UpTime() - LinuxParser::UpTime(pid_);
+}
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
