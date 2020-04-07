@@ -18,8 +18,12 @@ Process::Process(int pid) : pid_(pid) {}
 // Returns this process's ID.
 int Process::Pid() const { return pid_; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+// Return this process's CPU utilization.
+float Process::CpuUtilization() const {
+  // Process CPU utilization = spent seconds / total seconds
+  return (LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK)) /
+         static_cast<float>(LinuxParser::UpTime() - LinuxParser::UpTime(pid_));
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { return string(); }
