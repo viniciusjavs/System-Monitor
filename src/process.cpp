@@ -13,7 +13,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(int pid) : pid_(pid) {}
+Process::Process(int pid, std::string user) : pid_(pid), user_(user) {}
 
 // Returns this process's ID.
 int Process::Pid() const { return pid_; }
@@ -34,7 +34,7 @@ string Process::Command() { return LinuxParser::Command(pid_); }
 string Process::Ram() { return LinuxParser::Ram(pid_); }
 
 // Returns the user (name) that generated this process.
-string Process::User() { return LinuxParser::User(pid_); }
+string Process::User() const { return user_; }
 
 // Returns the age of this process (in seconds).
 long Process::UpTime() { return LinuxParser::UpTime(pid_); }

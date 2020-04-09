@@ -1,18 +1,16 @@
+#include "system.h"
+
 #include <unistd.h>
+
 #include <cstddef>
-#include <set>
-#include <string>
-#include <vector>
 
 #include "linux_parser.h"
 #include "process.h"
 #include "processor.h"
-#include "system.h"
 
 using std::set;
 using std::size_t;
 using std::string;
-using std::vector;
 
 System::System()
     : os_(LinuxParser::OperatingSystem()), kernel_(LinuxParser::Kernel()) {}
@@ -21,12 +19,12 @@ System::System()
 Processor& System::Cpu() { return cpu_; }
 
 // Return a container composed of the system's processes.
-vector<Process>& System::Processes() {
-  vector<Process> processes;
+set<Process>& System::Processes() {
+  set<Process> processes;
   for (auto pid : LinuxParser::Pids()) {
-    processes.emplace_back(Process{pid});
+      processes.emplace(Process{pid, LinuxParser::User(pid)});
   }
-  std::sort(std::begin(processes), std::end(processes));
+  // std::sort(std::begin(processes), std::end(processes));
   return processes_ = processes;
 }
 

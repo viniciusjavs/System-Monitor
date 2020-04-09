@@ -1,8 +1,8 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
+#include <set>
 #include <string>
-#include <vector>
 
 #include "process.h"
 #include "processor.h"
@@ -11,7 +11,7 @@ class System {
  public:
   System();
   Processor& Cpu();
-  std::vector<Process>& Processes();
+  std::set<Process>& Processes();
   float MemoryUtilization();
   long UpTime();
   int TotalProcesses();
@@ -21,7 +21,7 @@ class System {
 
  private:
   Processor cpu_{};
-  std::vector<Process> processes_{};
+  std::set<Process> processes_{};
   const std::string os_;
   const std::string kernel_;
 };
