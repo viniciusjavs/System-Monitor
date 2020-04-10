@@ -1,16 +1,20 @@
 #include "linux_parser.h"
 
-#include <dirent.h>
 #include <unistd.h>
 
+#include <filesystem>
 #include <limits>
 #include <string>
 #include <vector>
 
+using std::begin;
+using std::end;
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+
+namespace fs = std::filesystem;
 
 // Reads the operating system name from the filesystem.
 string LinuxParser::OperatingSystem() {
@@ -46,24 +50,15 @@ string LinuxParser::Kernel() {
   return kernel;
 }
 
-// BONUS: Update this to use std::filesystem
 // Reads and returns a vector of pids of all processes.
 vector<int> LinuxParser::Pids() {
-  vector<int> pids;
-  DIR* directory = opendir(kProcDirectory.c_str());
-  struct dirent* file;
-  while ((file = readdir(directory)) != nullptr) {
-    // Is this a directory?
-    if (file->d_type == DT_DIR) {
-      // Is every character of the name a digit?
-      string filename(file->d_name);
-      if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        int pid = stoi(filename);
-        pids.push_back(pid);
-      }
-    }
-  }
-  closedir(directory);
+  vector<int> pids{};
+  fs::directory_iterator path(kProcDirectory);
+  std::for_each(begin(path), end(path), [&pids](const fs::path& dir) {
+    string filename = dir.filename();
+    if (std::all_of(begin(filename), end(filename), isdigit))
+      pids.push_back(stoi(filename));
+  });
   return pids;
 }
 
