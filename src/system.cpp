@@ -1,4 +1,7 @@
+#include "system.h"
+
 #include <unistd.h>
+
 #include <cstddef>
 #include <set>
 #include <string>
@@ -7,7 +10,6 @@
 #include "linux_parser.h"
 #include "process.h"
 #include "processor.h"
-#include "system.h"
 
 using std::set;
 using std::size_t;
