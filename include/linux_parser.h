@@ -2,7 +2,6 @@
 #define SYSTEM_PARSER_H
 
 #include <fstream>
-#include <regex>
 #include <string>
 #include <valarray>
 

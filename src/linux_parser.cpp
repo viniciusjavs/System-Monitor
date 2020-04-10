@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include <filesystem>
+#include <iterator>
 #include <limits>
 #include <string>
 #include <vector>
